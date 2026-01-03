@@ -22,11 +22,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Build Docker image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/tfstaticwebsitestg:latest .
+            - name: Build Docker image
+        run: |
+          IMAGE_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          docker build -t ghcr.io/$IMAGE_OWNER/tfstaticwebsitestg:latest .
 
       - name: Push Docker image
-        run: docker push ghcr.io/${{ github.repository_owner }}/tfstaticwebsitestg:latest
+        run: |
+          IMAGE_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          docker push ghcr.io/$IMAGE_OWNER/tfstaticwebsitestg:latest
+
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -34,8 +39,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+            - name: Terraform Apply
+        run: terraform apply -auto-approve \
+          -var="image_name=ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/tfstaticwebsitestg:latest"
+        working-directory: terraform
+
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
