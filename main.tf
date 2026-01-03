@@ -28,6 +28,4 @@ resource "random_id" "suffix" {
   byte_length = 4
 }
 
-output "website_url" {
-  value = "http://${azurerm_container_group.static_site.fqdn}"
-}
+
