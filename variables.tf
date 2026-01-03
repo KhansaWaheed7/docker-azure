@@ -1,9 +1,4 @@
-variable "rg_name" {
-  type    = string
-  default = "tfstaticwebsitestg-rg"
-}
-
-variable "location" {
-  type    = string
-  default = "eastus"
+variable "image_name" {
+  description = "Docker image to deploy in Azure Container Instance"
+  type        = string
 }
