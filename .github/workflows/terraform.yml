@@ -38,14 +38,12 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: terraform
 
       - name: Terraform Apply
         run: |
           IMAGE_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           terraform apply -auto-approve \
             -var="image_name=ghcr.io/$IMAGE_OWNER/tfstaticwebsitestg:latest"
-        working-directory: terraform
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
